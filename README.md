@@ -74,3 +74,4 @@ The data is stored in the Minio bucket in Parquet format. To read the data, we c
 
 ## Issues
 - The JSON schema supplied to the Wikimedia Kafka Connect SSE is hard coded, so schema updates won't flow automatically. Wikimedia supply schema files here https://schema.wikimedia.org/#!/primary/jsonschema but they are .yaml and so need to be converted to JSON first.
+- Using seaborn and matplotlib to read dataframes means duckDb needs to be converted to pandas first. This is not ideal for large datasets as it leads to the entire dataset being loaded into memory.
