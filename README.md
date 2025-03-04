@@ -35,6 +35,8 @@ transforms.fromJson.schema.validation.enabled = false
 ```
 The JSON schema is supplied in the transforms.fromJson.json.schema.url field.
 
+Volumes are used to mount the configurations and data files into the Kafka Connect container, but no data persists once the docker services are stopped.
+
 ## Usage
 Navigate to the project directory and run the following Docker command bring the services up:
 ```
@@ -55,7 +57,21 @@ docker exec -it -w /bin kafka-connect bash
 ```
 This will open a bash shell in the Kafka Connect container. 
 
-Once the environment is running, navigate to `localhost:3030` to view the Kafka Connect interface. From here, you can monitor the status of the connectors and topics.
+From here, we can start the Kafka Connect service with the following command:
+```
+/bin/connect-standalone /data/connect-properties/connect-avro-standalone.properties /data/connect-properties/minio-sink-parquet.properties /data/connect-properties/wikimedia-changes.properties
+```
+This command starts the Kafka Connect service in standalone mode, using the configurations in the connect-avro-standalone.properties, minio-sink-parquet.properties, and wikimedia-changes.properties files.
+
+You should see the Kafka Connect service start up and begin streaming events from the Wikipedia recent changes SSE endpoint into the S3/Minio bucket.
+
+To verify that the events are being streamed correctly, you can check the Minio bucket by accessing the Minio web interface at `http://localhost:9000` and logging in with the credentials specified in your `.env` file or the default credentials.
+
+To terminate the process, press Ctrl+C in the terminal where the Kafka Connect service is running.
+```
+
+## Reading the data
+The data is stored in the Minio bucket in Parquet format. To read the data, we can use DuckDb to query the data naively from the S3 Parquet files. The wiki-jupyter notebook contains an example of how to read the data from the Minio bucket and query it using DuckDb.
 
 ## Issues
 - The JSON schema supplied to the Wikimedia Kafka Connect SSE is hard coded, so schema updates won't flow automatically. Wikimedia supply schema files here https://schema.wikimedia.org/#!/primary/jsonschema but they are .yaml and so need to be converted to JSON first.
