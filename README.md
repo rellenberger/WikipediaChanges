@@ -68,7 +68,6 @@ You should see the Kafka Connect service start up and begin streaming events fro
 To verify that the events are being streamed correctly, you can check the Minio bucket by accessing the Minio web interface at `http://localhost:9000` and logging in with the credentials specified in your `.env` file or the default credentials.
 
 To terminate the process, press Ctrl+C in the terminal where the Kafka Connect service is running.
-```
 
 ## Reading the data
 The data is stored in the Minio bucket in Parquet format. To read the data, we can use DuckDb to query the data naively from the S3 Parquet files. The wiki-jupyter notebook contains an example of how to read the data from the Minio bucket and query it using DuckDb.
